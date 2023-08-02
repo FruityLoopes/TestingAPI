@@ -4,22 +4,24 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
+import android.view.WindowManager
 
-class SplashScreen : AppCompatActivity() {
+class  SplashScreen : AppCompatActivity() {
+
+    private val SPLASH_DURATION: Long = 5000 // 5 seconds
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_splash_screen)
 
-        //If the supportActionBar object is not null, the hide() method is called to hide the support action bar (see Splash Screen - Android Studio,2020).
-        supportActionBar?.hide()
-
-        //The Handler().postDelayed() function is used to delay the execution of a block of code for a specified amount of time (see Splash Screen - Android Studio,2020).
-        //In this case, it delays the execution of an intent to start a new activity for 3 seconds (see Splash Screen - Android Studio,2020).
+        // Use a handler to delay the splash screen and then start the main activity
         Handler().postDelayed({
-            val intent= Intent(this@SplashScreen, MainActivity::class.java)
+            // Start the main activity
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
-            //Finishes the current activity using the finish() method (see Splash Screen - Android Studio,2020).
+
+            // Close the splash activity so the user won't go back to it using the back button
             finish()
-            //Delay time of 3000 milliseconds (3 seconds). This means that the code block will be executed after a delay of 3 seconds (see Splash Screen - Android Studio,2020).
-        },3000)
+        }, SPLASH_DURATION)
     }
 }

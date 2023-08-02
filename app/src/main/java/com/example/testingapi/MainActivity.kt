@@ -18,9 +18,10 @@ import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
+
     lateinit var txtvQuestion:TextView
     lateinit var txtvCategory:TextView
-    lateinit var txtvDifficulty:TextView
+   // lateinit var txtvDifficulty:TextView
     lateinit var txtAnswer:EditText
     lateinit var btnSubmitAnswer:Button
     lateinit var txtvAnswer:TextView
@@ -29,9 +30,11 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        supportActionBar?.hide()
         InfoGetter()
         var diff =  ArrayList<String>(10)
         //Setting values in array list(GeeksforGeeks, 2022)
@@ -53,19 +56,19 @@ class MainActivity : AppCompatActivity() {
         val btnGenerate:Button = findViewById(R.id.btnGenerate)
         btnGenerate.setOnClickListener {
             InfoGetter()
-            }
-            if ( variablesList[0].value<= 300) {
-                Toast.makeText(this, "You have selected Easy", Toast.LENGTH_SHORT)
-                    .show()
-
-            }
-            else if( variablesList[0].value>=301 && variablesList[0].value<=700) {
-                Toast.makeText(this, "You have selected Medium", Toast.LENGTH_SHORT)
-                    .show()
-            }
-            else {
-                android.widget.Toast.makeText(this, "You have selected Hard", android.widget.Toast.LENGTH_SHORT)
-                    .show()
+//            }
+//            if ( variablesList[0].value<= 300) {
+//                Toast.makeText(this, "You have selected Easy", Toast.LENGTH_SHORT)
+//                    .show()
+//
+//            }
+//            else if( variablesList[0].value>=301 && variablesList[0].value<=700) {
+//                Toast.makeText(this, "You have selected Medium", Toast.LENGTH_SHORT)
+//                    .show()
+//            }
+//            else {
+//                android.widget.Toast.makeText(this, "You have selected Hard", android.widget.Toast.LENGTH_SHORT)
+//                    .show()
         }
 
         btnSubmitAnswer.setOnClickListener(){
@@ -98,7 +101,7 @@ class MainActivity : AppCompatActivity() {
 
                 txtvQuestion.text = variablesList[0].question
                 txtvCategory.text = variablesList[0].category.title
-                txtvDifficulty.text = variablesList[0].value.toString()
+               // txtvDifficulty.text = variablesList[0].value.toString()
                 answer=variablesList[0].answer
                 Log.d("Display", "question: ${variablesList[0].question}, \nCategory: ${variablesList[0].category.title},\nDifficulty: ${variablesList[0].value.toString()}")
             }
