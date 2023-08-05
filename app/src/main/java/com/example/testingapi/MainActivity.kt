@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import com.google.gson.Gson
 import java.net.URL
+import java.util.Random
 import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
@@ -21,23 +22,23 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var txtvQuestion:TextView
     lateinit var txtvCategory:TextView
-   // lateinit var txtvDifficulty:TextView
     lateinit var txtAnswer:EditText
     lateinit var btnSubmitAnswer:Button
     lateinit var txtvAnswer:TextView
     lateinit var btnNextQuestion:Button
     lateinit var spinner1:Spinner
 
-
+    lateinit var variablesList:List<ApiVariables>
+    var random:Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
+
         InfoGetter()
         var diff =  ArrayList<String>(10)
-        //Setting values in array list(GeeksforGeeks, 2022)
         diff.add("Easy")
         diff.add("Medium")
         diff.add("Hard")
@@ -55,56 +56,84 @@ class MainActivity : AppCompatActivity() {
 
         val btnGenerate:Button = findViewById(R.id.btnGenerate)
         btnGenerate.setOnClickListener {
-            InfoGetter()
-//            }
-//            if ( variablesList[0].value<= 300) {
-//                Toast.makeText(this, "You have selected Easy", Toast.LENGTH_SHORT)
-//                    .show()
-//
-//            }
-//            else if( variablesList[0].value>=301 && variablesList[0].value<=700) {
-//                Toast.makeText(this, "You have selected Medium", Toast.LENGTH_SHORT)
-//                    .show()
-//            }
-//            else {
-//                android.widget.Toast.makeText(this, "You have selected Hard", android.widget.Toast.LENGTH_SHORT)
-//                    .show()
-        }
+            Random()
+            }
+
 
         btnSubmitAnswer.setOnClickListener(){
-            if(txtAnswer.text.toString().toLowerCase() == variablesList.get(0).answer.toString().toLowerCase()){
+            if(txtAnswer.text.toString().toLowerCase() == variablesList.get(random).answer.toString().toLowerCase()){
                 Toast.makeText(this, "Your answer was correct", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Incorrect answer, you suck!!", Toast.LENGTH_SHORT).show()
-                txtvAnswer.text = variablesList.get(0).answer.toString()
+                txtvAnswer.text = variablesList.get(random).answer.toString()
             }
         }
+
         btnNextQuestion.setOnClickListener(){
-            InfoGetter()
-            txtAnswer.setText("")
-            txtvAnswer.setText("")
+           Random()
+            txtvAnswer.text=""
+            txtvAnswer.text = variablesList.get(random).answer.toString()
         }
 
     }
-        lateinit var answer:String
-        lateinit var variablesList:List<ApiVariables>
-         private fun InfoGetter() {
+
+
+    private fun InfoGetter() {
         val executor =  Executors.newSingleThreadExecutor()
+
         executor.execute {
-            val url = URL("https://jservice.io/api/random")
+            val url = URL("https://jservice.io/api/random?count=100")
             val json = url.readText()
             variablesList = Gson().fromJson(json, Array<ApiVariables>::class.java).toList()
-
             Handler(Looper.getMainLooper()).post {
-                Log.d("PullingInfo", "Plain Json Vars :" + json.toString())
-                Log.d("ConvertingInfo", "Converted Json :" + variablesList.toString())
+               Log.d("Display", "Count: ${variablesList.count()}")
 
-                txtvQuestion.text = variablesList[0].question
-                txtvCategory.text = variablesList[0].category.title
-               // txtvDifficulty.text = variablesList[0].value.toString()
-                answer=variablesList[0].answer
-                Log.d("Display", "question: ${variablesList[0].question}, \nCategory: ${variablesList[0].category.title},\nDifficulty: ${variablesList[0].value.toString()}")
+                for (i in 1..variablesList.count() - 1 )
+                Log.d("Display", "question: ${variablesList[i].question}, \nCategory: ${variablesList[i].category.title},\nDifficulty: ${variablesList[i].value.toString()}, \n" +
+                        "Answer: ${variablesList[i].answer.toString()}")
             }
         }
+    }
+
+    private fun Random(){
+        val rand = 0..99
+
+        var ran = 0
+
+        var check = false
+        val diffi = spinner1.selectedItem
+        while (check == false){
+            ran = rand.random()
+            random = ran
+            txtvAnswer.text = variablesList[ran].answer
+            if(diffi == "Easy"){
+
+                if (variablesList[ran].value <= 300){
+                    txtvQuestion.text = variablesList[ran].question
+                    txtvCategory.text = variablesList[ran].category.title
+
+                    check = true
+                }
+            } else if (diffi == "Medium"){
+
+                if (variablesList[ran].value >= 301 && variablesList[ran].value <= 700){
+                    txtvQuestion.text = variablesList[ran].question
+                    txtvCategory.text = variablesList[ran].category.title
+
+                    check = true
+                }
+
+            } else {
+
+                if (variablesList[ran].value > 700){
+                    txtvQuestion.text = variablesList[ran].question
+                    txtvCategory.text = variablesList[ran].category.title
+
+                    check = true
+                }
+
+            }
+        }
+
     }
 }
